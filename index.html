@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Zenith Store - The ultimate frontier of premium e-commerce.">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Zenith Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="https://via.placeholder.com/100" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="dns-prefetch" href="https://via.placeholder.com">
+</head>
+<body>
+    <header class="sticky">
+        <nav>
+            <div class="logo" role="img" aria-label="Zenith Logo">Zenith</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search products..." aria-label="Search Products">
+                <button class="search-btn" aria-label="Search">🔍</button>
+            </div>
+            <ul>
+                <li><a href="#products" aria-label="Shop Products">Shop</a></li>
+                <li><a href="#experience" aria-label="Experience Zenith">Experience</a></li>
+                <li><a href="#vision" aria-label="Our Vision">Vision</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="wishlist-toggle" aria-label="Toggle Wishlist">
+                    <span class="wishlist-count">0</span>
+                    <svg viewBox="0 0 24 24" class="wishlist-svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                </button>
+                <button class="cart-toggle" aria-label="Toggle Cart">
+                    <span class="cart-count">0</span>
+                    <svg viewBox="0 0 24 24" class="cart-svg"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div class="mini-cart" aria-hidden="true">
+            <div class="mini-cart-content"></div>
+            <button class="view-cart-btn" aria-label="View Full Cart">View Cart</button>
+        </div>
+        <div class="wishlist-panel" aria-hidden="true">
+            <div class="wishlist-content"></div>
+            <button class="view-wishlist-btn" aria-label="View Full Wishlist">View Wishlist</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="hero">
+            <div class="hero-bg" aria-hidden="true">
+                <div class="parallax-layer layer-1"></div>
+                <div class="parallax-layer layer-2"></div>
+                <div class="particle-system"></div>
+            </div>
+            <div class="hero-content">
+                <h1>Transcend the Ordinary</h1>
+                <p>Unleash the future of premium design.</p>
+                <button class="hero-btn" aria-label="Discover Zenith Products">Discover Now</button>
+            </div>
+        </section>
+
+        <section class="products lazy-load" id="products">
+            <h2>Our Creations</h2>
+            <div class="filter-bar">
+                <button class="filter-btn" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="alpha">Alpha</button>
+                <button class="filter-btn" data-filter="omega">Omega</button>
+                <button class="compare-btn" aria-label="Compare Selected Products">Compare (<span class="compare-count">0</span>)</button>
+            </div>
+            <div class="spotlight" aria-live="polite">
+                <div class="spotlight-item"></div>
+            </div>
+            <div class="product-showcase">
+                <div class="product-item" data-id="1" data-price="1799" data-colors='["Nebula","Void","Aurora"]' data-sizes='["Compact","Pro"]' data-video="https://via.placeholder.com/1920x1080.mp4" data-category="alpha">
+                    <div class="product-3d" tabindex="0" aria-label="3D Preview of Zenith Alpha">
+                        <button class="wishlist-add" aria-label="Add Zenith Alpha to Wishlist">❤️</button>
+                        <input type="checkbox" class="compare-check" aria-label="Select Zenith Alpha for Comparison">
+                        <div class="zoom-overlay" aria-hidden="true"></div>
+                    </div>
+                    <h3>Zenith Alpha</h3>
+                    <p>From $1,799</p>
+                    <div class="reviews" aria-label="Product Reviews for Zenith Alpha">
+                        <span class="star">★★★★☆</span> (4.5)
+                    </div>
+                    <button class="explore-btn" aria-label="Explore Zenith Alpha">Explore</button>
+                </div>
+                <div class="product-item" data-id="2" data-price="2299" data-colors='["Eclipse","Dawn","Stellar"]' data-sizes='["Standard","Max"]' data-video="https://via.placeholder.com/1920x1080.mp4" data-category="omega">
+                    <div class="product-3d" tabindex="0" aria-label="3D Preview of Zenith Omega">
+                        <button class="wishlist-add" aria-label="Add Zenith Omega to Wishlist">❤️</button>
+                        <input type="checkbox" class="compare-check" aria-label="Select Zenith Omega for Comparison">
+                        <div class="zoom-overlay" aria-hidden="true"></div>
+                    </div>
+                    <h3>Zenith Omega</h3>
+                    <p>From $2,299</p>
+                    <div class="reviews" aria-label="Product Reviews for Zenith Omega">
+                        <span class="star">★★★★★</span> (5.0)
+                    </div>
+                    <button class="explore-btn" aria-label="Explore Zenith Omega">Explore</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <button class="close-modal" aria-label="Close Modal">✕</button>
+            <div class="modal-preview">
+                <div class="modal-3d-preview" aria-hidden="true">
+                    <button class="video-btn" aria-label="Play Product Video">▶</button>
+                    <div class="zoom-controls">
+                        <button class="zoom-in" aria-label="Zoom In">+</button>
+                        <button class="zoom-out" aria-label="Zoom Out">-</button>
+                    </div>
+                </div>
+                <div class="modal-details">
+                    <h3 id="modal-title" class="modal-title"></h3>
+                    <p class="modal-price"></p>
+                    <div class="customize-options">
+                        <div class="option-group">
+                            <h4>Color</h4>
+                            <div class="colors" aria-label="Color Options"></div>
+                        </div>
+                        <div class="option-group">
+                            <h4>Size</h4>
+                            <div class="sizes" aria-label="Size Options"></div>
+                        </div>
+                    </div>
+                    <button class="add-btn" aria-label="Add to Cart">Add to Cart</button>
+                    <div class="reviews-modal" aria-label="Product Reviews">
+                        <span class="star">★★★★☆</span> (4.5)
+                    </div>
+                </div>
+            </div>
+            <div class="video-fullscreen" aria-hidden="true">
+                <video controls></video>
+                <button class="close-video" aria-label="Close Video">✕</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-overlay" role="dialog" aria-modal="true" aria-labelledby="cart-header">
+        <div class="cart-panel">
+            <div class="cart-header">
+                <h3 id="cart-header">Your Cart (<span class="cart-count">0</span>)</h3>
+                <button class="close-cart" aria-label="Close Cart">✕</button>
+            </div>
+            <div class="cart-list" aria-live="polite"></div>
+            <div class="cart-summary">
+                <p>Total: <span class="cart-total">$0</span></p>
+                <button class="checkout-btn" aria-label="Proceed to Checkout">Checkout</button>
+            </div>
+        </div>
+        <div class="cart-sticky" aria-hidden="true">
+            <span class="cart-count">0</span> Items - <span class="cart-total">$0</span>
+            <button class="open-cart-btn" aria-label="Open Cart">🛒</button>
+        </div>
+    </div>
+
+    <div class="compare-modal" role="dialog" aria-modal="true" aria-labelledby="compare-title">
+        <div class="compare-content">
+            <h3 id="compare-title">Compare Products</h3>
+            <button class="close-compare" aria-label="Close Comparison">✕</button>
+            <div class="compare-list"></div>
+        </div>
+    </div>
+
+    <div class="notification" aria-live="polite"></div>
+
+    <footer class="lazy-load">
+        <p>© 2025 Zenith Store. Beyond the horizon.</p>
+    </footer>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
