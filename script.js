@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     wishlistToggle.addEventListener('mouseenter', () => showMiniPanel(wishlistPanel, wishlistTimeout));
 
     cartToggle.addEventListener('mouseleave', () => hideMiniPanel(miniCart, miniTimeout));
-    wishlistToggle.addEventListener('mouseleave', () => hideMiniPanel(wishlistPanel, wishlistTimeout));
+    wishlistToggle.addEventListener('mouseleave', () => hideMiniPanel(wishlist-panel, wishlistTimeout));
 
     miniCart.addEventListener('mouseenter', () => clearTimeout(miniTimeout));
     wishlistPanel.addEventListener('mouseenter', () => clearTimeout(wishlistTimeout));
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = e.target.closest('.product-item');
             const id = item.dataset.id;
             const name = item.querySelector('h3').textContent;
-            const price = parseInt(item.dataset.price);
+            const price = parseFloat(item.dataset.price);
 
             if (!wishlist.some(w => w.id === id)) {
                 wishlist.push({ id, name, price });
@@ -193,10 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.classList.add('wishlist-item');
             div.innerHTML = `
-                <img src="https://via.placeholder.com/50" alt="${item.name}" loading="lazy">
+                <img src="https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg" alt="${item.name}" loading="lazy">
                 <div>
                     <h4>${item.name}</h4>
-                    <p>$${item.price}</p>
+                    <p>$${item.price.toFixed(2)}</p>
                 </div>
             `;
             wishlistContent.appendChild(div);
@@ -214,14 +214,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = e.target.closest('.product-item');
             const id = item.dataset.id;
             const name = item.querySelector('h3').textContent;
-            const price = parseInt(item.dataset.price);
+            const price = parseFloat(item.dataset.price);
 
             if (e.target.checked) {
                 if (compare.length < 3) {
                     compare.push({ id, name, price });
                 } else {
                     e.target.checked = false;
-                    showNotification('You can compare up to 3 products.');
+                    showNotification('You can compare up to 3 gifts.');
                 }
             } else {
                 compare = compare.filter(c => c.id !== id);
@@ -238,14 +238,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const div = document.createElement('div');
                 div.classList.add('compare-item');
                 div.innerHTML = `
-                    <img src="https://via.placeholder.com/200" alt="${item.name}" loading="lazy">
+                    <img src="https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg" alt="${item.name}" loading="lazy">
                     <h4>${item.name}</h4>
-                    <p>$${item.price}</p>
+                    <p>$${item.price.toFixed(2)}</p>
                 `;
                 compareList.appendChild(div);
             });
         } else {
-            showNotification('Select products to compare!');
+            showNotification('Select gifts to compare!');
         }
     });
 
@@ -259,63 +259,48 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = e.target.closest('.product-item');
             const id = item.dataset.id;
             const name = item.querySelector('h3').textContent;
-            const basePrice = parseInt(item.dataset.price);
-            const colors = JSON.parse(item.dataset.colors);
-            const sizes = JSON.parse(item.dataset.sizes);
+            const basePrice = parseFloat(item.dataset.price);
+            const customizations = JSON.parse(item.dataset.customizations);
             const videoSrc = item.dataset.video;
             const reviews = item.querySelector('.reviews').innerHTML;
 
             modal.querySelector('.modal-title').textContent = name;
-            modal.querySelector('.modal-price').textContent = `$${basePrice}`;
+            modal.querySelector('.modal-price').textContent = `$${basePrice.toFixed(2)}`;
             modal.querySelector('.reviews-modal').innerHTML = reviews;
-            const colorsDiv = modal.querySelector('.colors');
-            const sizesDiv = modal.querySelector('.sizes');
-            colorsDiv.innerHTML = '';
-            sizesDiv.innerHTML = '';
+            const customizationOptions = modal.querySelector('.customization-options');
+            customizationOptions.innerHTML = '';
 
-            colors.forEach((color, i) => {
+            customizations.forEach((custom, i) => {
                 const div = document.createElement('div');
-                div.classList.add('color-opt');
-                div.style.background = color.toLowerCase();
-                div.dataset.color = color;
-                div.setAttribute('aria-label', `${color} Color`);
+                div.classList.add('customization-option');
+                div.textContent = custom;
+                div.dataset.custom = custom;
+                div.setAttribute('aria-label', `Select ${custom} customization`);
                 div.tabIndex = 0;
-                colorsDiv.appendChild(div);
+                customizationOptions.appendChild(div);
             });
 
-            sizes.forEach((size, i) => {
-                const div = document.createElement('div');
-                div.classList.add('size-opt');
-                div.textContent = size;
-                div.dataset.size = size;
-                div.setAttribute('aria-label', `${size} Size`);
-                div.tabIndex = 0;
-                sizesDiv.appendChild(div);
-            });
-
-            let selectedColor = colors[0];
-            let selectedSize = sizes[0];
+            let selectedCustomizations = [];
             let price = basePrice;
-            let scale = 1;
 
             const updatePreview = () => {
-                modal.querySelector('.modal-price').textContent = `$${price}`;
-                modal.querySelector('.modal-3d-preview').style.background = selectedColor.toLowerCase();
-                modal.querySelector('.modal-3d-preview').style.transform = `rotateX(0deg) rotateY(0deg) scale(${scale})`;
+                modal.querySelector('.modal-price').textContent = `$${price.toFixed(2)}`;
+                modal.querySelector('.modal-3d-preview').style.background = `url('https://images.pexels.com/photos/3761519/pexels-photo-3761519.jpeg') center/cover no-repeat`; /* Free Pexels image */
             };
 
-            const selectOption = (container, className, callback) => {
-                container.querySelectorAll(`.${className}`).forEach(opt => {
+            const selectCustomization = (container) => {
+                container.querySelectorAll('.customization-option').forEach(opt => {
                     const handler = (e) => {
-                        e.preventDefault(); // Prevent default touch behavior
+                        e.preventDefault();
                         container.querySelector('.active')?.classList.remove('active');
                         opt.classList.add('active');
-                        callback(opt);
+                        selectedCustomizations = Array.from(container.querySelectorAll('.active')).map(el => el.dataset.custom);
+                        price = basePrice + (selectedCustomizations.length * 10); // Add $10 per customization
                         updatePreview();
-                        showNotification(`Selected ${className === 'color-opt' ? 'color' : 'size'}: ${opt.dataset[className === 'color-opt' ? 'color' : 'size']}`);
+                        showNotification(`Selected ${opt.dataset.custom} for ${name}`);
                     };
                     opt.addEventListener('click', handler);
-                    opt.addEventListener('touchend', handler); // Add touch support
+                    opt.addEventListener('touchend', handler);
                     opt.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             handler(e);
@@ -324,31 +309,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             };
 
-            selectOption(colorsDiv, 'color-opt', opt => selectedColor = opt.dataset.color);
-            selectOption(sizesDiv, 'size-opt', opt => {
-                selectedSize = opt.dataset.size;
-                price = basePrice + (selectedSize === 'Pro' || selectedSize === 'Max' ? 200 : 0);
-            });
-
-            colorsDiv.querySelector('.color-opt').classList.add('active');
-            sizesDiv.querySelector('.size-opt').classList.add('active');
+            selectCustomization(customizationOptions);
+            customizationOptions.querySelector('.customization-option')?.classList.add('active');
             updatePreview();
 
             modal.style.display = 'flex';
             modal.querySelector('.modal-3d-preview').style.transform = 'rotateX(0deg) rotateY(0deg)';
             video.src = videoSrc;
-
-            // Ensure modal is scrollable on mobile
             modal.scrollTop = 0;
 
             // Zoom controls
+            let scale = 1;
             zoomInBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 scale = Math.min(2, scale + 0.1);
                 updatePreview();
             });
 
+            zoomInBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                scale = Math.min(2, scale + 0.1);
+                updatePreview();
+            });
+
             zoomOutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                scale = Math.max(1, scale - 0.1);
+                updatePreview();
+            });
+
+            zoomOutBtn.addEventListener('touchend', (e) => {
                 e.preventDefault();
                 scale = Math.max(1, scale - 0.1);
                 updatePreview();
@@ -400,34 +390,32 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.querySelector('.add-btn').addEventListener('click', (e) => {
         e.preventDefault();
         const name = modal.querySelector('.modal-title').textContent;
-        const price = parseInt(modal.querySelector('.modal-price').textContent.replace('$', ''));
-        const color = modal.querySelector('.colors .active').dataset.color;
-        const size = modal.querySelector('.sizes .active').dataset.size;
-        const id = Date.now().toString(); // Unique ID for cart item
+        const price = parseFloat(modal.querySelector('.modal-price').textContent.replace('$', ''));
+        const customizations = modal.querySelectorAll('.customization-option.active').length ? Array.from(modal.querySelectorAll('.customization-option.active')).map(el => el.dataset.custom).join(', ') : 'None';
+        const id = Date.now().toString();
 
-        cart.push({ id, name, price, color, size });
+        cart.push({ id, name, price, customizations });
         total += price;
         updateCart();
         modal.style.display = 'none';
         miniCart.classList.add('active');
-        showNotification(`${name} added to cart!`);
+        showNotification(`${name} with ${customizations} added to cart!`);
         setTimeout(() => miniCart.classList.remove('active'), 2000);
     });
 
     modal.querySelector('.add-btn').addEventListener('touchend', (e) => {
         e.preventDefault();
         const name = modal.querySelector('.modal-title').textContent;
-        const price = parseInt(modal.querySelector('.modal-price').textContent.replace('$', ''));
-        const color = modal.querySelector('.colors .active').dataset.color;
-        const size = modal.querySelector('.sizes .active').dataset.size;
-        const id = Date.now().toString(); // Unique ID for cart item
+        const price = parseFloat(modal.querySelector('.modal-price').textContent.replace('$', ''));
+        const customizations = modal.querySelectorAll('.customization-option.active').length ? Array.from(modal.querySelectorAll('.customization-option.active')).map(el => el.dataset.custom).join(', ') : 'None';
+        const id = Date.now().toString();
 
-        cart.push({ id, name, price, color, size });
+        cart.push({ id, name, price, customizations });
         total += price;
         updateCart();
         modal.style.display = 'none';
         miniCart.classList.add('active');
-        showNotification(`${name} added to cart!`);
+        showNotification(`${name} with ${customizations} added to cart!`);
         setTimeout(() => miniCart.classList.remove('active'), 2000);
     });
 
@@ -438,11 +426,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const cartItem = document.createElement('div');
             cartItem.classList.add('cart-item');
             cartItem.innerHTML = `
-                <img src="https://via.placeholder.com/100" alt="${item.name}" loading="lazy">
+                <img src="https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg" alt="${item.name}" loading="lazy">
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
-                    <p>${item.color} - ${item.size}</p>
-                    <p>$${item.price}</p>
+                    <p>Customizations: ${item.customizations}</p>
+                    <p>$${item.price.toFixed(2)}</p>
                 </div>
                 <button class="cart-item-remove" data-id="${item.id}" aria-label="Remove ${item.name} from Cart">✕</button>
             `;
@@ -451,10 +439,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const miniItem = document.createElement('div');
             miniItem.classList.add('mini-cart-item');
             miniItem.innerHTML = `
-                <img src="https://via.placeholder.com/50" alt="${item.name}" loading="lazy">
+                <img src="https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg" alt="${item.name}" loading="lazy">
                 <div>
                     <h4>${item.name}</h4>
-                    <p>$${item.price}</p>
+                    <p>$${item.price.toFixed(2)}</p>
                 </div>
             `;
             miniCartContent.appendChild(miniItem);
@@ -465,9 +453,8 @@ document.addEventListener('DOMContentLoaded', () => {
             el.style.transform = 'scale(1.2)';
             setTimeout(() => el.style.transform = 'scale(1)', 200);
         });
-        cartTotalEls.forEach(el => el.textContent = `$${total}`);
+        cartTotalEls.forEach(el => el.textContent = `$${total.toFixed(2)}`);
 
-        // Add remove functionality
         document.querySelectorAll('.cart-item-remove').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -497,7 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.checkout-btn').addEventListener('click', (e) => {
         e.preventDefault();
         if (cart.length > 0) {
-            showNotification(`Proceeding to checkout with ${cart.length} items for $${total}`);
+            showNotification(`Proceeding to checkout with ${cart.length} items for $${total.toFixed(2)}. Use a platform like Shopify or Stripe for payments!`);
         } else {
             showNotification('Your cart is empty!');
         }
@@ -506,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.checkout-btn').addEventListener('touchend', (e) => {
         e.preventDefault();
         if (cart.length > 0) {
-            showNotification(`Proceeding to checkout with ${cart.length} items for $${total}`);
+            showNotification(`Proceeding to checkout with ${cart.length} items for $${total.toFixed(2)}. Use a platform like Shopify or Stripe for payments!`);
         } else {
             showNotification('Your cart is empty!');
         }
@@ -561,39 +548,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Zoom Controls in Modal
-    document.querySelector('.zoom-in')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const preview = document.querySelector('.modal-3d-preview');
-        let scale = parseFloat(preview.style.scale || 1);
-        scale = Math.min(2, scale + 0.1);
-        preview.style.scale = scale;
-    });
-
-    document.querySelector('.zoom-in')?.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        const preview = document.querySelector('.modal-3d-preview');
-        let scale = parseFloat(preview.style.scale || 1);
-        scale = Math.min(2, scale + 0.1);
-        preview.style.scale = scale;
-    });
-
-    document.querySelector('.zoom-out')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const preview = document.querySelector('.modal-3d-preview');
-        let scale = parseFloat(preview.style.scale || 1);
-        scale = Math.max(1, scale - 0.1);
-        preview.style.scale = scale;
-    });
-
-    document.querySelector('.zoom-out')?.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        const preview = document.querySelector('.modal-3d-preview');
-        let scale = parseFloat(preview.style.scale || 1);
-        scale = Math.max(1, scale - 0.1);
-        preview.style.scale = scale;
-    });
-
     // Notification System
     function showNotification(message) {
         notification.textContent = message;
@@ -621,9 +575,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Service Worker registered');
         }).catch(err => console.error('Service Worker failed:', err));
 
-        // Cache assets for offline use
-        const cacheAssets = ['/', '/styles.css', '/script.js', 'https://via.placeholder.com/100', 'https://via.placeholder.com/50'];
-        caches.open('zenith-store').then(cache => cache.addAll(cacheAssets)).catch(err => console.error('Caching failed:', err));
+        // Cache assets for offline use, including free images
+        const cacheAssets = ['/', '/styles.css', '/script.js', 'https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg', 'https://images.pexels.com/photos/3761519/pexels-photo-3761519.jpeg'];
+        caches.open('zenith-gifts').then(cache => cache.addAll(cacheAssets)).catch(err => console.error('Caching failed:', err));
     } else {
         console.warn('Service Workers and caching are disabled when running on file:// protocol. Use a local server (e.g., http://localhost) for full functionality.');
     }
